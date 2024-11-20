@@ -29,7 +29,7 @@ const Tabs = () => {
                 >
                     Shadow
                 </button>
-            </div >
+            </div>
 
             {selectedTab === "Color" ? <ColorsItems /> : <NotFound />}
         </div >
