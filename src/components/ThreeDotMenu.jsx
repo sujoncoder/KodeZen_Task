@@ -1,57 +1,38 @@
-import { useState, useEffect } from "react";
-import EditModal from "./EditModal";
 import { GrEdit } from "react-icons/gr";
 import { HiOutlineDuplicate } from "react-icons/hi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
-const ThreeDotMenu = ({ onCloseMenuModal }) => {
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
-    const handleOpenEdit = () => {
-        setIsEditModalOpen(true);
-        console.log("Clicked Edit button...");
-    };
-
-    const handleCloseEditModal = () => {
-        console.log("Closing Edit Modal");
-        setIsEditModalOpen(false);
-    };
-
-    useEffect(() => {
-        console.log("Updated isEditModalOpen:", isEditModalOpen);
-    }, [isEditModalOpen]);
-
+const ThreeDotMenu = ({ onCloseMenuModal, onEditClick, onDuplicate, onDelete }) => {
     return (
         <section>
-            <div className="w-[170px] bg-white rounded-md">
+            <div className="w-44 bg-white rounded-md shadow">
                 {/* Edit Option */}
                 <button
-                    onClick={handleOpenEdit}
-                    className="hover:bg-slate-100 w-full duration-300 py-2 rounded flex items-center gap-2 cursor-pointer px-2"
+                    onClick={onEditClick}
+                    className="hover:bg-slate-100 w-full py-2 px-2 flex items-center gap-2 rounded duration-300"
                 >
-                    <GrEdit className="size-5 text-slate-500" />
-                    <span className="text-lg text-slate-500">Edit</span>
+                    <GrEdit className="text-slate-500" />
+                    <span className="text-slate-500 text-lg">Edit</span>
                 </button>
 
                 {/* Duplicate Option */}
                 <button
-                    onClick={onCloseMenuModal}
-                    className="hover:bg-slate-100 w-full duration-300 py-2 rounded flex items-center gap-2 cursor-pointer px-2">
-                    <HiOutlineDuplicate className="size-5 text-slate-500" />
-                    <span className="text-lg text-slate-500">Duplicate</span>
+                    onClick={() => { onDuplicate(); onCloseMenuModal(); }}
+                    className="hover:bg-slate-100 w-full py-2 px-2 flex items-center gap-2 rounded duration-300"
+                >
+                    <HiOutlineDuplicate className="text-slate-500" />
+                    <span className="text-slate-500 text-lg">Duplicate</span>
                 </button>
 
                 {/* Delete Option */}
                 <button
-                    onClick={onCloseMenuModal}
-                    className="hover:bg-slate-100 w-full duration-300 py-2 rounded flex items-center gap-2 cursor-pointer px-2">
-                    <RiDeleteBin6Line className="size-5 text-red-400" />
+                    onClick={() => { onDelete(); onCloseMenuModal(); }}
+                    className="hover:bg-slate-100 w-full py-2 px-2 flex items-center gap-2 rounded duration-300"
+                >
+                    <RiDeleteBin6Line className="text-red-400" />
                     <span className="text-red-400 text-lg">Delete</span>
                 </button>
             </div>
-
-            {/* Debug Modal Rendering */}
-            {isEditModalOpen && <EditModal onCloseEditModal={handleCloseEditModal} />}
         </section>
     );
 };

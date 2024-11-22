@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { arrayMoveImmutable as arrayMove } from "array-move";
-
 import SortableList from "./SortableList";
-import AddColor from "./AddColor";
+import EditModal from "./EditModal";
 
 const initialColors = [
     { id: 1, title: "Primary", color: "#FF6347" },
@@ -13,19 +12,36 @@ const initialColors = [
 
 const ColorsItems = () => {
     const [colorItems, setColorItems] = useState(initialColors);
-    const [hoveredId, setHoveredId] = useState(null);
     const [openMenuId, setOpenMenuId] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [currentItem, setCurrentItem] = useState(null);
 
-    const handleOpenMenu = (id) => {
-        setOpenMenuId(openMenuId === id ? null : id);
+    // Handle duplicating a color item
+    const handleDuplicate = (item) => {
+        const newId = colorItems.length + 1;
+        const duplicateItem = { ...item, id: newId };
+        setColorItems([...colorItems, duplicateItem]);
+        setOpenMenuId(null);  // Close the menu after duplication
     };
 
-    const closeMenu = () => {
-        setOpenMenuId(null);
+    // Handle deleting a color item
+    const handleDelete = (id) => {
+        const updatedItems = colorItems.filter(item => item.id !== id);
+        setColorItems(updatedItems);
+        setOpenMenuId(null);  // Close the menu after deletion
     };
 
-    const onSortEnd = ({ oldIndex, newIndex }) => {
-        setColorItems(arrayMove(colorItems, oldIndex, newIndex));
+    // Open and close menu
+    const handleOpenMenu = (id) => setOpenMenuId(openMenuId === id ? null : id);
+    const closeMenu = () => setOpenMenuId(null);
+
+    // Handle saving changes from edit modal
+    const handleSave = (title, color) => {
+        const updatedItems = colorItems.map((item) =>
+            item.id === currentItem.id ? { ...item, title, color } : item
+        );
+        setColorItems(updatedItems);
+        setIsModalOpen(false); // Close modal
     };
 
     return (
@@ -37,17 +53,36 @@ const ColorsItems = () => {
 
             <SortableList
                 items={colorItems}
-                onSortEnd={onSortEnd}
-                hoveredId={hoveredId}
-                setHoveredId={setHoveredId}
+                onSortEnd={({ oldIndex, newIndex }) => setColorItems(arrayMove(colorItems, oldIndex, newIndex))}
                 handleOpenMenu={handleOpenMenu}
                 openMenuId={openMenuId}
                 closeMenu={closeMenu}
+                onEditClick={(item) => {
+                    setCurrentItem(item);
+                    setIsModalOpen(true);
+                }}
+                onDuplicate={handleDuplicate}  // Pass duplicate handler
+                onDelete={handleDelete}        // Pass delete handler
             />
 
             <div className="mt-5">
-                <AddColor />
+                <button
+                    onClick={() => setIsModalOpen(true)} // Open Add Color Modal (can be used for adding new colors)
+                    className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-all"
+                >
+                    Add Color
+                </button>
             </div>
+
+            {/* Edit Color Modal */}
+            {isModalOpen && currentItem && (
+                <EditModal
+                    onCloseEditModal={() => setIsModalOpen(false)}
+                    currentTitle={currentItem.title}
+                    currentColor={currentItem.color}
+                    onHandleSave={handleSave}
+                />
+            )}
         </section>
     );
 };
