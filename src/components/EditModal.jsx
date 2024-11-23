@@ -7,10 +7,12 @@ const EditModal = ({ onCloseEditModal, currentTitle, currentColor, onHandleSave 
     const [title, setTitle] = useState(currentTitle);
     const [showPicker, setShowPicker] = useState(false);
 
+    // HANDLE COLOR CHANGE
     const handleColorChange = (color) => {
         setColor(color.hex);
     };
 
+    // HANDLE SAVE CLICK
     const handleSaveClick = () => {
         if (!title.trim()) {
             alert("Title cannot be empty.");
@@ -19,6 +21,7 @@ const EditModal = ({ onCloseEditModal, currentTitle, currentColor, onHandleSave 
         onHandleSave(title, color);
         onCloseEditModal();
     };
+
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
@@ -89,6 +92,7 @@ const EditModal = ({ onCloseEditModal, currentTitle, currentColor, onHandleSave 
                     >
                         Cancel
                     </button>
+
                     <button
                         onClick={handleSaveClick}
                         className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-all"

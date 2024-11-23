@@ -1,7 +1,8 @@
 import { SortableContainer } from "react-sortable-hoc";
 import SortableItem from "./SortableItem";
 
-const SortableList = SortableContainer(({ items, handleOpenMenu, openMenuId, closeMenu, onEditClick, onDuplicate, onDelete }) => {
+
+const SortableList = SortableContainer(({ items, onHandleOpenMenu, openMenuId, onCloseMenu, onEditClick, onDuplicate, onDelete }) => {
     return (
         <div>
             {items.map((item, index) => (
@@ -9,12 +10,12 @@ const SortableList = SortableContainer(({ items, handleOpenMenu, openMenuId, clo
                     key={item.id}
                     index={index}
                     item={item}
-                    handleOpenMenu={handleOpenMenu}
+                    onHandleOpenMenu={onHandleOpenMenu}
                     openMenuId={openMenuId}
-                    closeMenu={closeMenu}
+                    onCloseMenu={onCloseMenu}
                     onEditClick={onEditClick}
-                    onDuplicate={onDuplicate}  // Pass duplicate handler
-                    onDelete={onDelete}        // Pass delete handler
+                    onDuplicate={onDuplicate}
+                    onDelete={onDelete}
                 />
             ))}
         </div>

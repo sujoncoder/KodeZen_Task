@@ -14,70 +14,95 @@ const ColorsItems = () => {
     const [colorItems, setColorItems] = useState(initialColors);
     const [openMenuId, setOpenMenuId] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAddMode, setIsAddMode] = useState(false);
     const [currentItem, setCurrentItem] = useState(null);
 
-    // Handle duplicating a color item
+
+    // HANDLE DUPLICATE COLOR ITEM
     const handleDuplicate = (item) => {
         const newId = colorItems.length + 1;
         const duplicateItem = { ...item, id: newId };
         setColorItems([...colorItems, duplicateItem]);
-        setOpenMenuId(null);  // Close the menu after duplication
+        setOpenMenuId(null);
     };
 
-    // Handle deleting a color item
+    // HANDLE DELETE COLOR ITEM
     const handleDelete = (id) => {
         const updatedItems = colorItems.filter(item => item.id !== id);
         setColorItems(updatedItems);
-        setOpenMenuId(null);  // Close the menu after deletion
+        setOpenMenuId(null);
     };
 
-    // Open and close menu
+    // HANDLE OPEN MENU
     const handleOpenMenu = (id) => setOpenMenuId(openMenuId === id ? null : id);
+
+    // HANDLE CLOSE MENU
     const closeMenu = () => setOpenMenuId(null);
 
-    // Handle saving changes from edit modal
+    // HANDLE ADD COLOR ITEM AND EDIT COLOR ITEM
     const handleSave = (title, color) => {
-        const updatedItems = colorItems.map((item) =>
-            item.id === currentItem.id ? { ...item, title, color } : item
-        );
-        setColorItems(updatedItems);
-        setIsModalOpen(false); // Close modal
+        if (isAddMode) {
+            const newId = colorItems.length + 1;
+            setColorItems([...colorItems, { id: newId, title, color }]);
+        } else {
+            const updatedItems = colorItems.map((item) =>
+                item.id === currentItem.id ? { ...item, title, color } : item
+            );
+            setColorItems(updatedItems);
+        }
+
+        setIsModalOpen(false);
+        setIsAddMode(false);
     };
 
     return (
         <section>
-            <div className="grid grid-cols-[1fr_200px] items-center border-b-2 py-3">
+            {/* STATIC NAME VALUE TITILE SECTION */}
+            <div className="grid grid-cols-1 sm:grid-cols-[1fr_200px] gap-4 items-center border-b-2 py-3">
                 <span className="text-slate-600 font-semibold">Name</span>
                 <span className="text-slate-600 font-semibold">Value</span>
             </div>
 
+
+            {/* SORTABLE LIST FOR COLOR ITEM */}
             <SortableList
                 items={colorItems}
                 onSortEnd={({ oldIndex, newIndex }) => setColorItems(arrayMove(colorItems, oldIndex, newIndex))}
-                handleOpenMenu={handleOpenMenu}
+                onHandleOpenMenu={handleOpenMenu}
                 openMenuId={openMenuId}
-                closeMenu={closeMenu}
+                onCloseMenu={closeMenu}
                 onEditClick={(item) => {
                     setCurrentItem(item);
+                    setIsAddMode(false);
                     setIsModalOpen(true);
                 }}
-                onDuplicate={handleDuplicate}  // Pass duplicate handler
-                onDelete={handleDelete}        // Pass delete handler
+                onDuplicate={handleDuplicate}
+                onDelete={handleDelete}
             />
 
-            <div className="mt-5">
+
+            {/* ADD COLOR BUTTON */}
+            <div className="mt-5 text-center sm:text-left">
                 <button
-                    onClick={() => setIsModalOpen(true)} // Open Add Color Modal (can be used for adding new colors)
-                    className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-all"
+                    onClick={() => {
+                        setIsAddMode(true);
+                        setCurrentItem({ title: "", color: "#000000" });
+                        setIsModalOpen(true);
+                    }}
+                    className="px-4 py-2 bg-slate-100 border font-semibold text-slate-700 rounded-md hover:bg-slate-200 transition-all"
                 >
                     Add Color
                 </button>
             </div>
 
-            {/* Edit Color Modal */}
+
+            {/* EDIT COLOR MODAL */}
             {isModalOpen && currentItem && (
                 <EditModal
-                    onCloseEditModal={() => setIsModalOpen(false)}
+                    onCloseEditModal={() => {
+                        setIsModalOpen(false);
+                        setIsAddMode(false);
+                    }}
                     currentTitle={currentItem.title}
                     currentColor={currentItem.color}
                     onHandleSave={handleSave}
