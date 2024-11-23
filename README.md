@@ -6,8 +6,8 @@ This project is a simple **React-based color management interface** that allows 
 ![alt text](https://i.ibb.co.com/P5m3qdT/color-edit.png)
 
 ### Links
-1. [Live Link](https://kode-zen-task.vercel.app/) - `https://kode-zone-task.vercel.app/`
-2. [Code Link](https://github.com/sujoncoder/KodeZen_Task) -`https://github.com/sujoncoder/KodeZone_Task`
+1. [Live Link](https://kode-zen-task.vercel.app/) - `https://kode-zen-task.vercel.app/`
+2. [Code Link](https://github.com/sujoncoder/KodeZen_Task) -`https://github.com/sujoncoder/KodeZen_Task`
 
 
 
